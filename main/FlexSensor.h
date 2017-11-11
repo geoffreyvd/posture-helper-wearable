@@ -7,13 +7,13 @@
 
 #include "Arduino.h"
 
-Class FlexSensor
+class FlexSensor
 {
   public:
     FlexSensor(int pin);
     float read();
   private:
     int _pin;
-}
+};
 
 #endif

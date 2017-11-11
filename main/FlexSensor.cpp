@@ -3,7 +3,7 @@
  * Created by Geoffrey van Driessel, November 11, 2017.
  */
 #include "Arduino.h"
-#include "Morse.h"
+#include "FlexSensor.h"
 
 FlexSensor::FlexSensor(int pin)
 {

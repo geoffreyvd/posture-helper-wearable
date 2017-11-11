@@ -1,4 +1,4 @@
-#include <FlexSensor.h>
+#include "FlexSensor.h"
 void setup() {
   // put your setup code here, to run once:
 
