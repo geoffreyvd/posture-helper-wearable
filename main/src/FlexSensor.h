@@ -29,6 +29,9 @@ float _straightResistance;
  */
 float _maximumResistance;
 
+/**
+ * This holds current resistance when the FlexSensor bends
+ */
 float _currentResistance;
 
 };

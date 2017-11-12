@@ -67,6 +67,6 @@ void loop() {
         //  "Resistance from the FlexSensor: " +
         // String(flexSensorOuputResistance/1000)+ " Kohm");
 
-        Serial.println();
+        //Serial.println();
         //delay(1000);
 }
