@@ -41,5 +41,6 @@ float FlexSensor::readVoltage(float circuitVoltage)
 float FlexSensor::getResistance(float circuitVoltage, float vdcDividerResistance)
 {
         float flexADC = readVoltage(circuitVoltage);
-        return vdcDividerResistance * (circuitVoltage/ flexADC - 1.0);
+        _currentResistance = vdcDividerResistance * (circuitVoltage/ flexADC - 1.0);
+        return _currentResistance;
 }

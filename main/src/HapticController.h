@@ -9,18 +9,19 @@
 
 class HapticController
 {
-  public:
-    HapticController(int pin1, int pin2, int pin3, int pin4, int pin5, int pin6);
-    void update(int flex1, int flex2, int flex3);
-  private:
-    int _pin1;
-    int _pin2;
-    int _pin3;
-    int _pin4;
-    int _pin5;
-    int _pin6;
-    unsigned long _previousMillis;
-    void pattern1(int pin1, int pin2);
+public:
+HapticController(int pinArray[]);
+void monitorAndUpdate(float flex1, float flex2, float flex3);
+private:
+int _pin1;
+int _pin2;
+int _pin3;
+int _pin4;
+int _pin5;
+int _pin6;
+unsigned long _previousMillis;
+void pattern1(int pin1, int pin2);
+void turnOff(int pin1, int pin2);
 };
 
 #endif

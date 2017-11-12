@@ -28,6 +28,9 @@ float _straightResistance;
  *  The resistance of the FlexSensor at 90 deg
  */
 float _maximumResistance;
+
+float _currentResistance;
+
 };
 
 #endif
