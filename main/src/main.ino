@@ -31,10 +31,10 @@ const float STRAIGHT_RESISTANCE = 30000.0;
 /**
  *  The resistance of the FlexSensor at 90 deg
  */
-const float Maximum_RESISTANCE = 60000.0;
+const float MAXIMUM_RESISTANCE = 60000.0;
 
 //initialize a new FlexSensor
-FlexSensor flex1(A0,STRAIGHT_RESISTANCE,Maximum_RESISTANCE);
+FlexSensor flex1(A0,STRAIGHT_RESISTANCE,MAXIMUM_RESISTANCE);
 HapticController haptic1(hapticfeedbackPins);
 /**
  * [setup description]
