@@ -36,25 +36,9 @@ HapticController::HapticController(int pinArray[])
  */
 void HapticController::monitorAndUpdate(float flex1, float flex2, float flex3)
 {
-        int pattern1Threshhold = 55;
-        if(flex1 > pattern1Threshhold) {
-                pattern1(_pin1, _pin2);
-        }
-        else{
-                turnOff(_pin1, _pin2);
-        }
-        if(flex2 > pattern1Threshhold) {
-                pattern1(_pin3, _pin4);
-        }
-        else{
-                turnOff(_pin3, _pin4);
-        }
-        if(flex3 > pattern1Threshhold) {
-                pattern1(_pin5, _pin6);
-        }
-        else{
-                turnOff(_pin5, _pin6);
-        }
+        pattern1(flex1, _pin1, _pin2);
+        pattern1(flex2, _pin3, _pin4);
+        pattern1(flex3, _pin5, _pin6);
 }
 
 /**
@@ -62,9 +46,13 @@ void HapticController::monitorAndUpdate(float flex1, float flex2, float flex3)
  * @param  pin1 A pin of feedback motor
  * @param  pin2 A pin of feedback motor
  */
-void HapticController::pattern1(int pin1, int pin2){
-        digitalWrite(pin1, HIGH);
-        digitalWrite(pin2, HIGH);
+void HapticController::pattern1(float flex, int pin1, int pin2){
+        int intensity = 0;
+
+        intensity = map(flex, 0, 1024, 0, 255);
+
+        analogWrite(pin1, intensity);
+        analogWrite(pin2, intensity);
 }
 
 /**

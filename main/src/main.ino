@@ -20,7 +20,7 @@ const float vdcDividerResistance = 46500.0;
  * Each Pin will will form a power source for HapticFeedback motors
  *
  */
-int hapticfeedbackPins[6] = {11,12,13,7,8,9};
+int hapticfeedbackPins[6] = {3, 5, 6, 9, 10, 11};
 
 /**
  *  The resistance of the FlexSensor when it's straight (unbended)
@@ -35,6 +35,8 @@ const float MAXIMUM_RESISTANCE = 60000.0;
 
 //initialize a new FlexSensor
 FlexSensor flex1(A0,STRAIGHT_RESISTANCE,MAXIMUM_RESISTANCE);
+FlexSensor flex2(A1,STRAIGHT_RESISTANCE,MAXIMUM_RESISTANCE);
+FlexSensor flex3(A2,STRAIGHT_RESISTANCE,MAXIMUM_RESISTANCE);
 HapticController haptic1(hapticfeedbackPins);
 /**
  * [setup description]
@@ -49,7 +51,11 @@ void setup() {
  */
 void loop() {
         //Read the value of the FlexSensor
-        float flexSensorOuputResistance = flex1.getResistance(
+        float flexSensorOuputResistance1 = flex1.getResistance(
+                circuitVoltage,vdcDividerResistance);
+        float flexSensorOuputResistance2 = flex2.getResistance(
+                circuitVoltage,vdcDividerResistance);
+        float flexSensorOuputResistance3 = flex3.getResistance(
                 circuitVoltage,vdcDividerResistance);
         /**
          * The code part which be responsible for triggering the HapticFeedback
@@ -57,9 +63,9 @@ void loop() {
          *  on research.
          * For now this only turns on a LED
          */
-        haptic1.monitorAndUpdate(flexSensorOuputResistance/1000,
-                                 flexSensorOuputResistance/1000,
-                                 flexSensorOuputResistance/1000);
+        haptic1.monitorAndUpdate(flexSensorOuputResistance1/1000,
+                                 flexSensorOuputResistance2/1000,
+                                 flexSensorOuputResistance3/1000);
         //print values for debug & testing  and extra info
         //Serial.println("Voltage from the SerialPort "
         //+ String(flex1.readVoltage(circuitVoltage)) + " Volt" );
