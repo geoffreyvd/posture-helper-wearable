@@ -20,7 +20,7 @@ int _pin4;
 int _pin5;
 int _pin6;
 unsigned long _previousMillis;
-void pattern1(int pin1, int pin2);
+void pattern1(float flex, int pin1, int pin2);
 void turnOff(int pin1, int pin2);
 };
 
