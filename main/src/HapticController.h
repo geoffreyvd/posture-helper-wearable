@@ -11,7 +11,7 @@ class HapticController
 {
 public:
 HapticController(int pinArray[]);
-void monitorAndUpdate(float flex1, float flex2, float flex3);
+void update(float flex1, float flex2, float flex3);
 private:
 int _pin1;
 int _pin2;
@@ -21,7 +21,6 @@ int _pin5;
 int _pin6;
 unsigned long _previousMillis;
 void pattern1(float flex, int pin1, int pin2);
-void turnOff(int pin1, int pin2);
 };
 
 #endif

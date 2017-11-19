@@ -2,17 +2,6 @@
 #include "FlexSensor.h"
 #include "HapticController.h"
 #include "Arduino.h"
-/**
- * Measured voltage of Ardunio 5V line
- * This value wouldn't be changed. This is the amount of Volt the Arduino gives
- */
-const float circuitVoltage= 4.85;
-/**
- * Theoratically it's 47k resistor
- * Each FlexSensor must have its own Resistor
- *
- */
-const float vdcDividerResistance = 46500.0;
 
 /**
  * This array represents range of DigitalPins which will be set to HIGH when
@@ -20,23 +9,21 @@ const float vdcDividerResistance = 46500.0;
  * Each Pin will will form a power source for HapticFeedback motors
  *
  */
-int hapticfeedbackPins[6] = {3, 5, 6, 9, 10, 11};
+const int hapticfeedbackPins[6] = {3, 5, 6, 9, 10, 11};
 
-/**
- *  The resistance of the FlexSensor when it's straight (unbended)
- *
- */
-const float STRAIGHT_RESISTANCE = 30000.0;
+//kalibration of the flex sensors, min as in smallest angle
+const int STRAIGHT_VALUE = 370;
+const int MIN_VALUE = 450;  //utmost value in postive direction
+const int MAX_VALUE = 150;  //utmost value in opposite (negative) direction
 
-/**
- *  The resistance of the FlexSensor at 90 deg
- */
-const float MAXIMUM_RESISTANCE = 60000.0;
+int flexValue1 = 0;
+int flexValue2 = 0;
+int flexValue3 = 0;
 
-//initialize a new FlexSensor
-FlexSensor flex1(A0,STRAIGHT_RESISTANCE,MAXIMUM_RESISTANCE);
-FlexSensor flex2(A1,STRAIGHT_RESISTANCE,MAXIMUM_RESISTANCE);
-FlexSensor flex3(A2,STRAIGHT_RESISTANCE,MAXIMUM_RESISTANCE);
+//initialize new FlexSensors
+FlexSensor flex1(A0, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
+FlexSensor flex2(A1, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
+FlexSensor flex3(A2, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
 HapticController haptic1(hapticfeedbackPins);
 /**
  * [setup description]
@@ -51,28 +38,17 @@ void setup() {
  */
 void loop() {
         //Read the value of the FlexSensor
-        float flexSensorOuputResistance1 = flex1.getResistance(
-                circuitVoltage,vdcDividerResistance);
-        float flexSensorOuputResistance2 = flex2.getResistance(
-                circuitVoltage,vdcDividerResistance);
-        float flexSensorOuputResistance3 = flex3.getResistance(
-                circuitVoltage,vdcDividerResistance);
-        /**
-         * The code part which be responsible for triggering the HapticFeedback
-         * The 55 is an imaginary value. The Threshold should be specified based
-         *  on research.
-         * For now this only turns on a LED
-         */
-        haptic1.monitorAndUpdate(flexSensorOuputResistance1/1000,
-                                 flexSensorOuputResistance2/1000,
-                                 flexSensorOuputResistance3/1000);
-        //print values for debug & testing  and extra info
-        //Serial.println("Voltage from the SerialPort "
-        //+ String(flex1.readVoltage(circuitVoltage)) + " Volt" );
-        //Serial.println(
-        //  "Resistance from the FlexSensor: " +
-        // String(flexSensorOuputResistance/1000)+ " Kohm");
+        flexValue1 = flex1.getValue();
+        flexValue2 = flex2.getValue();
+        flexValue3 = flex3.getValue();
 
-        //Serial.println();
-        //delay(1000);
+        //pass flex values to haptic controller, to actiavte a pattern
+        haptic1.update(flexValue1, flexValue2, flexValue3);
+
+        // debugging, DONT FORGET TO UNCOMMENT SERIAL.BEGIN IN SETUP
+        Serial.println("----flex values---");
+        Serial.println(flexValue1);
+        Serial.println(flexValue2);
+        Serial.println(flexValue3);
+        delay(500);
 }

@@ -9,30 +9,13 @@
 class FlexSensor
 {
 public:
-FlexSensor(int pin, float straightResistance, float maximumResistance);
-float getResistance(float circuitVoltage, float vdcDividerResistance);
-float readVoltage(float circuitVoltage);
+  FlexSensor(int pin, int straightValue, int minimumValue, int maximumValue);
+  int getValue();
 private:
-
-/**
- * The used Pin
- */
-int _pin;
-/**
- *  The resistance of the FlexSensor when it's straight (unbended)
- *
- */
-float _straightResistance;
-
-/**
- *  The resistance of the FlexSensor at 90 deg
- */
-float _maximumResistance;
-
-/**
- * This holds current resistance when the FlexSensor bends
- */
-float _currentResistance;
+  int _minimumValue;
+  int _maximumValue;
+  int _pin;
+  int _straightValue;
 
 };
 

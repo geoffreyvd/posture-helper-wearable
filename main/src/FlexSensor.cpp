@@ -11,36 +11,18 @@
  * @param straightResistance [description]
  * @param maximumResistor    [description]
  */
-FlexSensor::FlexSensor(int pin, float straightResistance,
-                       float maximumResistance)
+FlexSensor::FlexSensor(int pin, int straightValue,
+                       int minimumValue, int maximumValue)
 {
         pinMode(pin, INPUT);
         _pin = pin;
-        _straightResistance = straightResistance;
-        _maximumResistance = maximumResistance;
+        _straightValue = straightValue;
+        _minimumValue = minimumValue;
+        _maximumValue = maximumValue;
 }
 
-/**
- * [FlexSensor::readVoltage reads the voltage of the assigned PIN ]
- * @return the voltage as an integer between 0 and 1024
- */
-float FlexSensor::readVoltage(float circuitVoltage)
+// return a value between (minimum value and maximum value) - straightValue. example range : -180 till +80 positive bent
+int FlexSensor::getValue()
 {
-        int inputVoltageDigital = analogRead(_pin);
-        return (inputVoltageDigital * circuitVoltage) / 1023.0;
-}
-
-/**
- * [FlexSensor::getResistance this function calculates the resistance based on
- * the readin voltage from a specific Analog input pin ]
- * @param  circuitVoltage       In volt. The output voltage the Arduino gives
- * @param  vdcDividerResistance  In Ohm. The amount Ohms of the resistor that is
- * connected to the FlexSensor
- * @return                      in Ohm. The amount of resistance.
- */
-float FlexSensor::getResistance(float circuitVoltage, float vdcDividerResistance)
-{
-        float flexADC = readVoltage(circuitVoltage);
-        _currentResistance = vdcDividerResistance*(circuitVoltage/flexADC-1.0);
-        return _currentResistance;
+  return (analogRead(_pin) - _straightValue);
 }

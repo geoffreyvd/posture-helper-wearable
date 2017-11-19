@@ -25,7 +25,6 @@ HapticController::HapticController(int pinArray[])
         _pin4 = pinArray[3];
         _pin5 = pinArray[4];
         _pin6 = pinArray[5];
-        _previousMillis = millis();
 }
 
 /**
@@ -34,7 +33,7 @@ HapticController::HapticController(int pinArray[])
  * @param flex2 Amount of resistance for 2nd FlexSensor
  * @param flex3 Amount of resistance for 3rd FlexSensor
  */
-void HapticController::monitorAndUpdate(float flex1, float flex2, float flex3)
+void HapticController::update(float flex1, float flex2, float flex3)
 {
         pattern1(flex1, _pin1, _pin2);
         pattern1(flex2, _pin3, _pin4);
@@ -42,25 +41,18 @@ void HapticController::monitorAndUpdate(float flex1, float flex2, float flex3)
 }
 
 /**
- * [HapticController::pattern1 Turns on given feedback motors]
- * @param  pin1 A pin of feedback motor
- * @param  pin2 A pin of feedback motor
+ * [HapticController::pattern1 Use PWM to adjust the intensity of haptic vibration based on the angle of the flex sensor]
  */
 void HapticController::pattern1(float flex, int pin1, int pin2){
         int intensity = 0;
 
-        intensity = map(flex, 0, 1024, 0, 255);
+        //assume that value is given between -180 and +80, make negative postive so it can be used to map intensity
+        if(flex < 0){
+          flex = 0 - flex;
+        }
+
+        intensity = map(flex, 0, 180, 0, 255);
 
         analogWrite(pin1, intensity);
         analogWrite(pin2, intensity);
-}
-
-/**
- * [HapticController::turnOff Turns off given feedback motors]
- * @param  pin1 A pin of feedback motor
- * @param  pin2 A pin of feedback motor
- */
-void HapticController::turnOff(int pin1, int pin2){
-        digitalWrite(pin1, LOW);
-        digitalWrite(pin2, LOW);
 }
