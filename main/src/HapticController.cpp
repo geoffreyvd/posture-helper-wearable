@@ -34,20 +34,20 @@ HapticController::HapticController(int pinArray[], int pattern)
  * @param flex2 Amount of resistance for 2nd FlexSensor
  * @param flex3 Amount of resistance for 3rd FlexSensor
  */
-void HapticController::update(float flex1, float flex2, float flex3)
+void HapticController::update(int flex1, int flex2, int flex3)
 {
     if (_selectedPattern == 1)
     {        
-        pattern1(flex1, _pin1, _pin2);
-        pattern1(flex2, _pin3, _pin4);
-        pattern1(flex3, _pin5, _pin6);
+        pattern1(flex1, _pin1, _pin2, 100);
+        pattern1(flex2, _pin3, _pin4, 150);
+        pattern1(flex3, _pin5, _pin6, 200);
     }
 }
 
 /**
  * [HapticController::pattern1 Use PWM to adjust the intensity of haptic vibration based on the angle of the flex sensor]
  */
-void HapticController::pattern1(float flex, int pin1, int pin2){
+void HapticController::pattern1(int flex, int pin1, int pin2, int amplifier){
         int intensity = 0;
 
         //assume that value is given between -180 and +80, make negative postive so it can be used to map intensity
@@ -55,7 +55,9 @@ void HapticController::pattern1(float flex, int pin1, int pin2){
           flex = 0 - flex;
         }
 
-        intensity = map(flex, 0, 180, 0, 255);
+        flex = (flex * amplifier) / 100;
+
+        intensity = constrain(map(flex, 0, 180, 0, 255), 0, 255);
 
         analogWrite(pin1, intensity);
         analogWrite(pin2, intensity);
