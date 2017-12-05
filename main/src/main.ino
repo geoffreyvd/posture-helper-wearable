@@ -20,6 +20,10 @@ int flexValue1 = 0;
 int flexValue2 = 0;
 int flexValue3 = 0;
 
+unsigned long timeSinceCommunication = 0;
+unsigned long timeCurrent = 0;
+const unsigned long communicationDelay = 500; // 500ms
+
 //initialize new FlexSensors
 FlexSensor flex1(A0, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
 FlexSensor flex2(A1, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
@@ -37,6 +41,7 @@ void setup() {
  * [loop description]
  */
 void loop() {
+        timeCurrent = millis();
         //Read the value of the FlexSensor
         flexValue1 = flex1.getValue();
         flexValue2 = flex2.getValue();
@@ -45,10 +50,14 @@ void loop() {
         //pass flex values to haptic controller, to actiavte a pattern
         haptic1.update(flexValue1, flexValue2, flexValue3);
 
-        // debugging, DONT FORGET TO UNCOMMENT SERIAL.BEGIN IN SETUP
-        Serial.println("----flex values---");
-        Serial.println(flexValue1);
-        Serial.println(flexValue2);
-        Serial.println(flexValue3);
-        delay(500);
+        if(timeCurrent > timeSinceCommunication + communicationDelay){
+                // debugging, DONT FORGET TO UNCOMMENT SERIAL.BEGIN IN SETUP
+                Serial.println("----flex values---");
+                Serial.println(flexValue1);
+                Serial.println(flexValue2);
+                Serial.println(flexValue3);
+                Serial.println("----time---");
+                Serial.println(timeCurrent);
+                timeSinceCommunication = millis();
+        }
 }
