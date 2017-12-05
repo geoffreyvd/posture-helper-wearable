@@ -24,7 +24,7 @@ int flexValue3 = 0;
 FlexSensor flex1(A0, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
 FlexSensor flex2(A1, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
 FlexSensor flex3(A2, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
-HapticController haptic1(hapticfeedbackPins);
+HapticController haptic1(hapticfeedbackPins, 1);
 /**
  * [setup description]
  */

@@ -14,7 +14,7 @@
  * @param pin5 [description]
  * @param pin6 [description]
  */
-HapticController::HapticController(int pinArray[])
+HapticController::HapticController(int pinArray[], int pattern)
 {
         for (int i=0; i<6; i++) {
                 pinMode(pinArray[i], OUTPUT);
@@ -25,6 +25,7 @@ HapticController::HapticController(int pinArray[])
         _pin4 = pinArray[3];
         _pin5 = pinArray[4];
         _pin6 = pinArray[5];
+        _selectedPattern = pattern;
 }
 
 /**
@@ -35,9 +36,12 @@ HapticController::HapticController(int pinArray[])
  */
 void HapticController::update(float flex1, float flex2, float flex3)
 {
+    if (_selectedPattern == 1)
+    {        
         pattern1(flex1, _pin1, _pin2);
         pattern1(flex2, _pin3, _pin4);
         pattern1(flex3, _pin5, _pin6);
+    }
 }
 
 /**

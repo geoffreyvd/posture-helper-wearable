@@ -19,6 +19,7 @@ int _pin3;
 int _pin4;
 int _pin5;
 int _pin6;
+int _selectedPattern;
 unsigned long _previousMillis;
 void pattern1(float flex, int pin1, int pin2);
 };
