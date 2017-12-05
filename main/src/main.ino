@@ -10,6 +10,7 @@
  *
  */
 const int hapticfeedbackPins[6] = {3, 5, 6, 9, 10, 11};
+const int selectedPattern = 1
 
 //kalibration of the flex sensors, min as in smallest angle
 const int STRAIGHT_VALUE = 370;
@@ -24,17 +25,24 @@ unsigned long timeSinceCommunication = 0;
 unsigned long timeCurrent = 0;
 const unsigned long communicationDelay = 500; // 500ms
 
+//buffer for sending timestamp(long) to serial
+byte buffer[4];
+byte endingByte = 255;
 //initialize new FlexSensors
 FlexSensor flex1(A0, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
 FlexSensor flex2(A1, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
 FlexSensor flex3(A2, STRAIGHT_VALUE, MIN_VALUE, MAX_VALUE);
-HapticController haptic1(hapticfeedbackPins, 1);
+HapticController haptic1(hapticfeedbackPins, selectedPattern);
 /**
  * [setup description]
  */
 void setup() {
         //Sets the data rate in bits per second
         Serial.begin(9600);
+        //MessageType1 (start, after calibration) - calibrationFlexValue1 - calibrationFlexValue2 - calibrationFlexValue3 - pattern - endingByte
+        Serial.write(selectedPattern, endingByte);
+        //TODO calibration each flexsensor, pass those values to flex objects and haptic controller, 
+        //and then calibrate user flex values and write in starting message
 }
 
 /**
@@ -42,7 +50,8 @@ void setup() {
  */
 void loop() {
         timeCurrent = millis();
-        //Read the value of the FlexSensor
+
+        //Read the values of the FlexSensor
         flexValue1 = flex1.getValue();
         flexValue2 = flex2.getValue();
         flexValue3 = flex3.getValue();
@@ -51,13 +60,14 @@ void loop() {
         haptic1.update(flexValue1, flexValue2, flexValue3);
 
         if(timeCurrent > timeSinceCommunication + communicationDelay){
-                // debugging, DONT FORGET TO UNCOMMENT SERIAL.BEGIN IN SETUP
-                Serial.println("----flex values---");
-                Serial.println(flexValue1);
-                Serial.println(flexValue2);
-                Serial.println(flexValue3);
-                Serial.println("----time---");
-                Serial.println(timeCurrent);
+                buffer[0] = timeCurrent & 255;
+                buffer[1] = (timeCurrent >> 8) & 255;
+                buffer[2] = (timeCurrent >> 16) & 255;
+                buffer[3] = (timeCurrent >> 24) & 255;
+                //MessageType2 (every cycle)  - Total millis since start - FlexSensorValue1 - FlexSensorValue2 - FlexSensorValue3 - endingByte
+                Serial.write(buffer + "," + flexValue1 + "," + flexValue2 + "," + flexValue3 + endingByte);
+                //flex values will alsohave to be buffered...
+
                 timeSinceCommunication = millis();
         }
 }
