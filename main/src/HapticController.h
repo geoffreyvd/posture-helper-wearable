@@ -10,7 +10,7 @@
 class HapticController
 {
 public:
-HapticController(int pinArray[]);
+HapticController(int pinArray[], int pattern);
 void update(int flex1, int flex2, int flex3);
 private:
 int _pin1;
@@ -21,7 +21,7 @@ int _pin5;
 int _pin6;
 int _selectedPattern;
 unsigned long _previousMillis;
-void pattern1(int flex, int pin1, int pin2);
+void pattern1(int flex, int pin1, int amplifier);
 };
 
 #endif
