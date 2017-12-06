@@ -39,9 +39,9 @@ void HapticController::update()
 {
     if (_selectedPattern == 1)
     {
-        pattern1(_flex1, _pin1, 100);
+        pattern1(_flex1, _pin1, 200);
         pattern1(_flex2, _pin2, 150);
-        pattern1(_flex3, _pin3, 200);
+        pattern1(_flex3, _pin3, 100);
     }
 }
 
@@ -50,6 +50,7 @@ void HapticController::update()
  */
 void HapticController::pattern1(FlexSensor flex, int pin, int amplifier){
         int intensity = flex.getValue();
+        //Serial.println("intensity: " + String(pin) +  " " + String(intensity));
 
         //assume that value is given between -180 and +80, make negative postive so it can be used to map intensity
         if(intensity < 0){
@@ -58,7 +59,7 @@ void HapticController::pattern1(FlexSensor flex, int pin, int amplifier){
 
         intensity = (intensity * amplifier) / 100;
 
-        intensity = constrain(map(intensity, 0, flex._maximumValueCalibrated, 0, 255), 0, 255);
+        intensity = constrain(map(intensity, 0, flex._minimumValueCalibrated, 0, 255), 0, 255);
 
         analogWrite(pin, intensity);
 }

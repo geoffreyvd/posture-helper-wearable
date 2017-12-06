@@ -24,10 +24,6 @@ const int MIN_VALUE_BOTTOM = 450;
 const int MAX_VALUE_BOTTOM = 230;
 
 
-int flexValue1 = 0;
-int flexValue2 = 0;
-int flexValue3 = 0;
-
 unsigned long timeSinceCommunication = 0;
 unsigned long timeCurrent = 0;
 const unsigned long communicationDelay = 500; // 500ms
@@ -58,15 +54,8 @@ void setup() {
 void loop() {
         timeCurrent = millis();
 
-
         //pass flex values to haptic controller, to activate a pattern
         haptic1.update();
-
-       Serial.println("----flex values---");
-       Serial.println(flexValue1);
-       Serial.println(flexValue2);
-       Serial.println(flexValue3);
-       delay(500);
 
         if(timeCurrent > timeSinceCommunication + communicationDelay){
                 buffer[0] = timeCurrent & 255;
