@@ -4,6 +4,7 @@
  */
 #include "Arduino.h"
 #include "HapticController.h"
+#include "FlexSensor.h"
 
 /**
  * [HapticController::HapticController description]
@@ -14,7 +15,7 @@
  * @param pin5 [description]
  * @param pin6 [description]
  */
-HapticController::HapticController(int pinArray[], int pattern)
+HapticController::HapticController(int pinArray[], int pattern, FlexSensor &flex1, FlexSensor &flex2, FlexSensor &flex3)
 {
         for (int i=0; i<3; i++) {
                 pinMode(pinArray[i], OUTPUT);
@@ -23,6 +24,9 @@ HapticController::HapticController(int pinArray[], int pattern)
         _pin2 = pinArray[1];
         _pin3 = pinArray[2];
         _selectedPattern = pattern;
+        _flex1 = flex1;
+        _flex2 = flex2;
+        _flex3 = flex3;
 }
 
 /**
@@ -31,30 +35,30 @@ HapticController::HapticController(int pinArray[], int pattern)
  * @param flex2 Amount of resistance for 2nd FlexSensor
  * @param flex3 Amount of resistance for 3rd FlexSensor
  */
-void HapticController::update(int flex1, int flex2, int flex3)
+void HapticController::update()
 {
     if (_selectedPattern == 1)
     {
-        pattern1(flex1, _pin1, 100);
-        pattern1(flex2, _pin2, 150);
-        pattern1(flex3, _pin3, 200);
+        pattern1(_flex1, _pin1, 100);
+        pattern1(_flex2, _pin2, 150);
+        pattern1(_flex3, _pin3, 200);
     }
 }
 
 /**
  * [HapticController::pattern1 Use PWM to adjust the intensity of haptic vibration based on the angle of the flex sensor]
  */
-void HapticController::pattern1(int flex, int pin1, int amplifier){
-        int intensity = 0;
+void HapticController::pattern1(FlexSensor flex, int pin, int amplifier){
+        int intensity = flex.getValue();
 
         //assume that value is given between -180 and +80, make negative postive so it can be used to map intensity
-        if(flex < 0){
-          flex = 0 - flex;
+        if(intensity < 0){
+          intensity = 0 - intensity;
         }
 
-        flex = (flex * amplifier) / 100;
+        intensity = (intensity * amplifier) / 100;
 
-        intensity = constrain(map(flex, 0, 180, 0, 255), 0, 255);
+        intensity = constrain(map(intensity, 0, flex._maximumValueCalibrated, 0, 255), 0, 255);
 
-        analogWrite(pin1, intensity);
+        analogWrite(pin, intensity);
 }

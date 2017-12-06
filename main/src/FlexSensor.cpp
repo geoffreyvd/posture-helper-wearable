@@ -11,14 +11,20 @@
  * @param straightResistance [description]
  * @param maximumResistor    [description]
  */
+FlexSensor::FlexSensor(){
+
+}
+
 FlexSensor::FlexSensor(int pin, int straightValue,
                        int minimumValue, int maximumValue)
 {
         pinMode(pin, INPUT);
         _pin = pin;
         _straightValue = straightValue;
-        _minimumValue = minimumValue;
-        _maximumValue = maximumValue;
+        _minimumValueAnalog = minimumValue;
+        _maximumValueAnalog = maximumValue;
+        _minimumValueCalibrated = minimumValue - straightValue;
+        _maximumValueCalibrated = maximumValue - straightValue;
 }
 
 // return a value between (minimum value and maximum value) - straightValue. example range : -180 till +80 positive bent

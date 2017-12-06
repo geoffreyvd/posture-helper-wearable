@@ -9,11 +9,14 @@
 class FlexSensor
 {
 public:
+  FlexSensor();
   FlexSensor(int pin, int straightValue, int minimumValue, int maximumValue);
   int getValue();
+  int _minimumValueAnalog;
+  int _maximumValueAnalog;
+  int _minimumValueCalibrated;
+  int _maximumValueCalibrated;
 private:
-  int _minimumValue;
-  int _maximumValue;
   int _pin;
   int _straightValue;
 

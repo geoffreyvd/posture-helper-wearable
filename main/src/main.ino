@@ -39,7 +39,7 @@ byte endingByte = 255;
 FlexSensor flex1(A0, STRAIGHT_VALUE_TOP, MIN_VALUE_TOP, MAX_VALUE_TOP);
 FlexSensor flex2(A1, STRAIGHT_VALUE_MIDDLE, MIN_VALUE_MIDDLE, MAX_VALUE_MIDDLE);
 FlexSensor flex3(A2, STRAIGHT_VALUE_BOTTOM, MIN_VALUE_BOTTOM, MAX_VALUE_BOTTOM);
-HapticController haptic1(hapticfeedbackPins, selectedPattern);
+HapticController haptic1(hapticfeedbackPins, selectedPattern, flex1, flex2, flex3);
 /**
  * [setup description]
  */
@@ -58,15 +58,11 @@ void setup() {
 void loop() {
         timeCurrent = millis();
 
-        //Read the values of the FlexSensor
-        flexValue1 = flex1.getValue();
-        flexValue2 = flex2.getValue();
-        flexValue3 = flex3.getValue();
 
-        //pass flex values to haptic controller, to actiavte a pattern
-        haptic1.update(flexValue1, flexValue2, flexValue3);
+        //pass flex values to haptic controller, to activate a pattern
+        haptic1.update();
 
-      Serial.println("----flex values---");
+       Serial.println("----flex values---");
        Serial.println(flexValue1);
        Serial.println(flexValue2);
        Serial.println(flexValue3);
