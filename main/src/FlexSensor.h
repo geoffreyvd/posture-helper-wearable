@@ -16,9 +16,10 @@ public:
   int _maximumValueAnalog;
   int _minimumValueCalibrated;
   int _maximumValueCalibrated;
+  int _straightValue;
 private:
   int _pin;
-  int _straightValue;
+
 
 };
 

@@ -21,8 +21,14 @@ FlexSensor _flex1;
 FlexSensor _flex2;
 FlexSensor _flex3;
 int _selectedPattern;
+int _highToLowIntensity;
+int _lowToHighIntensity;
+int _patternPulseDelay;
 unsigned long _previousMillis;
+unsigned long _patternTimer;
 void pattern1(FlexSensor flex, int pin, int amplifier);
+void pattern2(FlexSensor flex, int pin);
+void pattern3(FlexSensor flex, int pin);
 };
 
 #endif

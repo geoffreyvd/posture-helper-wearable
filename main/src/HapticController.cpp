@@ -27,6 +27,10 @@ HapticController::HapticController(int pinArray[], int pattern, FlexSensor &flex
         _flex1 = flex1;
         _flex2 = flex2;
         _flex3 = flex3;
+        _patternTimer = 0;
+        _lowToHighIntensity = 0;
+        _highToLowIntensity = 255;
+        _patternPulseDelay = 10;
 }
 
 /**
@@ -40,8 +44,9 @@ void HapticController::update()
     if (_selectedPattern == 1)
     {
         pattern1(_flex1, _pin1, 200);
-        pattern1(_flex2, _pin2, 150);
-        pattern1(_flex3, _pin3, 100);
+        pattern3(_flex2, _pin2);
+        // pattern1(_flex3, _pin3, 100);
+        pattern2(_flex3, _pin3);
     }
 }
 
@@ -62,4 +67,70 @@ void HapticController::pattern1(FlexSensor flex, int pin, int amplifier){
         intensity = constrain(map(intensity, 0, flex._minimumValueCalibrated, 0, 255), 0, 255);
 
         analogWrite(pin, intensity);
+}
+
+void HapticController::pattern2(FlexSensor flex, int pin) {
+
+    unsigned long _currentTime;
+    int flexValue = flex.getValue();
+    int range = flex._minimumValueCalibrated - flex._maximumValueCalibrated;
+    int threshold = (range / 90) * 20; // find analog value for 1 degree and multiply by threshold required (i.e +- 20 degrees)
+    int upperBound = threshold;
+    int lowerBound = threshold * -1;
+
+    // Serial.println("Lowerbound: " + String(lowerBound));
+    // Serial.println("Uppbound: " + String(upperBound));
+    // Serial.println("flexValue: " + String(flexValue));
+
+    if(flexValue < lowerBound) {
+
+          _currentTime = millis();
+
+          if(_currentTime > _patternTimer + _patternPulseDelay ) {
+            analogWrite(pin, _lowToHighIntensity);
+            _lowToHighIntensity += 25;
+            _patternTimer = millis();
+          }
+
+          if(_lowToHighIntensity >= 255) {
+            _lowToHighIntensity = 0;
+          }
+
+        } else if(flexValue > upperBound) {
+
+          _currentTime = millis();
+
+          if(_currentTime > _patternTimer + _patternPulseDelay ) {
+            analogWrite(pin, _highToLowIntensity);
+            _highToLowIntensity -= 25;
+            _patternTimer = millis();
+          }
+
+          if(_highToLowIntensity <= 0) {
+            _highToLowIntensity = 255;
+          }
+
+        } else {
+          _lowToHighIntensity = 0;
+          _highToLowIntensity = 255;
+          analogWrite(pin, 0);
+        }
+
+}
+
+
+void HapticController::pattern3(FlexSensor flex, int pin) {
+
+    int flexValue = flex.getValue();
+    int range = flex._minimumValueCalibrated - flex._maximumValueCalibrated;
+    int threshold = (range / 90) * 20; // find analog value for 1 degree and multiply by threshold required (i.e +- 20 degrees)
+    int upperBound = threshold;
+    int lowerBound = threshold * -1;
+
+    if(flexValue < lowerBound || flexValue > upperBound) {
+      analogWrite(pin, 255);
+    } else {
+      analogWrite(pin, 0);
+    }
+
 }

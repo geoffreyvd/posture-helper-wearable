@@ -15,7 +15,7 @@ const int selectedPattern = 1;
 //kalibration of the flex sensors, min as in smallest angle
 const int STRAIGHT_VALUE_TOP = 290;
 const int STRAIGHT_VALUE_MIDDLE = 385;
-const int STRAIGHT_VALUE_BOTTOM = 340;
+const int STRAIGHT_VALUE_BOTTOM = 325;
 const int MIN_VALUE_TOP = 420;  //utmost value in postive direction
 const int MAX_VALUE_TOP = 100;  //utmost value in opposite (negative) direction
 const int MIN_VALUE_MIDDLE = 500;
@@ -28,8 +28,12 @@ unsigned long timeSinceCommunication = 0;
 unsigned long timeCurrent = 0;
 const unsigned long communicationDelay = 500; // 500ms
 
+int flexValue1;
+int flexValue2;
+int flexValue3;
+
 //buffer for sending timestamp(long) to serial
-byte buffer[4];
+byte buffer[11];
 byte endingByte = 255;
 //initialize new FlexSensors
 FlexSensor flex1(A0, STRAIGHT_VALUE_TOP, MIN_VALUE_TOP, MAX_VALUE_TOP);
@@ -56,15 +60,27 @@ void loop() {
 
         //pass flex values to haptic controller, to activate a pattern
         haptic1.update();
+        flexValue1 = flex1.getValue();
+        flexValue2 = flex2.getValue();
+        flexValue3 = flex3.getValue();
 
         if(timeCurrent > timeSinceCommunication + communicationDelay){
                 buffer[0] = timeCurrent & 255;
                 buffer[1] = (timeCurrent >> 8) & 255;
                 buffer[2] = (timeCurrent >> 16) & 255;
                 buffer[3] = (timeCurrent >> 24) & 255;
+                buffer[4] = flexValue1 & 255;
+                buffer[5] = (flexValue1 >> 8) & 255;
+                buffer[6] = flexValue2 & 255;
+                buffer[7] = (flexValue2 >> 8) & 255;
+                buffer[8] = flexValue3 & 255;
+                buffer[9] = (flexValue3 >> 8) & 255;
+                buffer[10] = endingByte;
+
                 //MessageType2 (every cycle)  - Total millis since start - FlexSensorValue1 - FlexSensorValue2 - FlexSensorValue3 - endingByte
-                // Serial.write(buffer + "," + flexValue1 + "," + flexValue2 + "," + flexValue3 + endingByte);
+                //Serial.write(buffer + "," + flexValue1 + "," + flexValue2 + "," + flexValue3 + endingByte);
                 //flex values will alsohave to be buffered...
+                Serial.write(buffer, 11);
 
                 timeSinceCommunication = millis();
         }
