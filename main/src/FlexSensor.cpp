@@ -34,7 +34,8 @@ int FlexSensor::getValue()
   return (analogRead(_pin) - _straightValue);
 }
 
-void FlexSensor::updateCalibratedValues(int val) {
-  _minimumValueCalibrated = _minimumValueAnalog - val;
-  _maximumValueCalibrated = _maximumValueAnalog - val;
+void FlexSensor::updateCalibratedValues(int userStraightValue) {
+  _userCalibrated = userStraightValue;
+  _minimumValueCalibrated = _minimumValueAnalog - userStraightValue;
+  _maximumValueCalibrated = _maximumValueAnalog - userStraightValue;
 }
