@@ -15,7 +15,7 @@
  * @param pin5 [description]
  * @param pin6 [description]
  */
-HapticController::HapticController(int pinArray[], int pattern, FlexSensor &flex1, FlexSensor &flex2, FlexSensor &flex3)
+HapticController::HapticController(int pinArray[], int pattern, FlexSensor *flex1, FlexSensor *flex2, FlexSensor *flex3)
 {
         for (int i=0; i<3; i++) {
                 pinMode(pinArray[i], OUTPUT);
@@ -41,6 +41,7 @@ HapticController::HapticController(int pinArray[], int pattern, FlexSensor &flex
  */
 void HapticController::update()
 {
+
     if (_selectedPattern == 1)
     {
         pattern1(_flex1, _pin1, 200);
@@ -55,19 +56,14 @@ void HapticController::update()
         pattern3(_flex1, _pin1);
         pattern3(_flex2, _pin2);
         pattern3(_flex3, _pin3);
-    } else if(_selectedPattern == 4){
-        pattern4(_flex1, _pin1);
-        pattern4(_flex2, _pin2);
-        pattern4(_flex3, _pin3);
-
     }
 }
 
 /**
  * [HapticController::pattern1 Use PWM to adjust the intensity of haptic vibration based on the angle of the flex sensor]
  */
-void HapticController::pattern1(FlexSensor flex, int pin, int amplifier){
-        int intensity = flex.getValue();
+void HapticController::pattern1(FlexSensor *flex, int pin, int amplifier){
+        int intensity = flex->getValue();
         //Serial.println("intensity: " + String(pin) +  " " + String(intensity));
 
         //assume that value is given between -180 and +80, make negative postive so it can be used to map intensity
@@ -77,23 +73,28 @@ void HapticController::pattern1(FlexSensor flex, int pin, int amplifier){
 
         intensity = (intensity * amplifier) / 100;
 
-        intensity = constrain(map(intensity, 0, flex._maximumValueCalibrated, 0, 255), 0, 255);
+        intensity = constrain(map(intensity, 0, flex->_maximumValueCalibrated, 0, 255), 0, 255);
 
         analogWrite(pin, intensity);
 }
 
-void HapticController::pattern2(FlexSensor flex, int pin) {
+void HapticController::pattern2(FlexSensor *flex, int pin) {
 
     unsigned long _currentTime;
-    int flexValue = flex.getValue();
-    int range = flex._minimumValueCalibrated - flex._maximumValueCalibrated;
-    int threshold = (range / 90) * 2; // find analog value for 1 degree and multiply by threshold required (i.e +- 20 degrees)
-    int upperBound = flex._userCalibrated - threshold;
-    int lowerBound = flex._userCalibrated + (threshold * -1);
+
+    int flexValue = flex->getValue();
+    // int range = flex._minimumValueCalibrated - flex._maximumValueCalibrated;
+    // int threshold = (range / 90) * 10; // find analog value for 1 degree and multiply by threshold required (i.e +- 20 degrees)
+    // int upperBound = flex._userCalibrated - threshold;
+    // int lowerBound = flex._userCalibrated + (threshold * -1);
 
     // Serial.println("Lowerbound: " + String(lowerBound));
     // Serial.println("Uppbound: " + String(upperBound));
     // Serial.println("flexValue: " + String(flexValue));
+    int lowerBound = -35;
+    int upperBound = 35;
+    Serial.println("VALUE: " + String(flexValue));
+
 
     if(flexValue < lowerBound) {
 
@@ -132,23 +133,18 @@ void HapticController::pattern2(FlexSensor flex, int pin) {
 }
 
 
-void HapticController::pattern3(FlexSensor flex, int pin) {
+void HapticController::pattern3(FlexSensor *flex, int pin) {
 
-    int flexValue = flex.getValue();
-    int range = flex._minimumValueCalibrated - flex._maximumValueCalibrated;
+    int flexValue = flex->getValue();
+    int range = flex->_minimumValueCalibrated - flex->_maximumValueCalibrated;
     int threshold = (range / 90) * 20; // find analog value for 1 degree and multiply by threshold required (i.e +- 20 degrees)
-    int upperBound = flex._userCalibrated - threshold;
-    int lowerBound = flex._userCalibrated + (threshold * -1);
+    int upperBound = flex->_userCalibrated - threshold;
+    int lowerBound = flex->_userCalibrated + (threshold * -1);
 
     if(flexValue < lowerBound || flexValue > upperBound) {
       analogWrite(pin, 255);
     } else {
       analogWrite(pin, 0);
     }
-
-}
-
-void HapticController::pattern4(FlexSensor flex, int pin) {
-  analogWrite(pin, 255);
 
 }

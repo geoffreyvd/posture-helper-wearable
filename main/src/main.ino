@@ -10,7 +10,7 @@
  *
  */
 const int hapticfeedbackPins[6] = {3, 5, 6};
-const int selectedPattern = 1;
+const int selectedPattern = 2;
 
 //kalibration of the flex sensors, min as in smallest angle
 const int STRAIGHT_VALUE_TOP = 290;
@@ -29,8 +29,8 @@ const int STATUS_LOGGING = 2;
 
 unsigned long timeSinceCommunication = 0;
 unsigned long timeCurrent = 0;
-const unsigned long communicationDelay = 500; // 500ms
-int currentStatus;
+const unsigned long communicationDelay = 100; // 500ms
+int currentStatus = 1;
 
 int flexValue1;
 int flexValue2;
@@ -43,14 +43,14 @@ byte endingByte = 255;
 FlexSensor flex1(A0, STRAIGHT_VALUE_TOP, MIN_VALUE_TOP, MAX_VALUE_TOP);
 FlexSensor flex2(A1, STRAIGHT_VALUE_MIDDLE, MIN_VALUE_MIDDLE, MAX_VALUE_MIDDLE);
 FlexSensor flex3(A2, STRAIGHT_VALUE_BOTTOM, MIN_VALUE_BOTTOM, MAX_VALUE_BOTTOM);
-HapticController haptic1(hapticfeedbackPins, selectedPattern, flex1, flex2, flex3);
+HapticController haptic1(hapticfeedbackPins, selectedPattern, &flex1, &flex2, &flex3);
 /**
  * [setup description]
  */
 void setup() {
         //Sets the data rate in bits per second
         Serial.begin(9600);
-        currentStatus = STATUS_STOPPED;
+        currentStatus = 1;
 
 
 }
@@ -66,10 +66,11 @@ void loop() {
         flex1.read();
         flex2.read();
         flex3.read();
-        haptic1.update();
         flexValue1 = flex1.getValue();
         flexValue2 = flex2.getValue();
         flexValue3 = flex3.getValue();
+        haptic1.update();
+
 
         if(Serial.available() > 0) {
           currentStatus = Serial.read();
@@ -87,7 +88,7 @@ void loop() {
           Serial.print(",");
           Serial.print(selectedPattern);
           Serial.println();
-          currentStatus = STATUS_STOPPED;
+          currentStatus = 0;
 
         } else if(currentStatus == STATUS_LOGGING) {
 
