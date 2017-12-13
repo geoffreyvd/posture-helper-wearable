@@ -73,6 +73,9 @@ void loop() {
         }
 
         if(currentStatus == STATUS_CALIBRATE) {
+          flex1._userCalibrated = flexValue1;
+          flex2._userCalibrated = flexValue2;
+          flex3._userCalibrated = flexValue3;
           Serial.print(flexValue1);
           Serial.print(",");
           Serial.print(flexValue2);

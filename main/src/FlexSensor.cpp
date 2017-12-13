@@ -25,10 +25,16 @@ FlexSensor::FlexSensor(int pin, int straightValue,
         _maximumValueAnalog = maximumValue;
         _minimumValueCalibrated = minimumValue - straightValue;
         _maximumValueCalibrated = maximumValue - straightValue;
+        _userCalibrated = straightValue;
 }
 
 // return a value between (minimum value and maximum value) - straightValue. example range : -180 till +80 positive bent
 int FlexSensor::getValue()
 {
   return (analogRead(_pin) - _straightValue);
+}
+
+void FlexSensor::updateCalibratedValues(int val) {
+  _minimumValueCalibrated = _minimumValueAnalog - val;
+  _maximumValueCalibrated = _maximumValueAnalog - val;
 }
