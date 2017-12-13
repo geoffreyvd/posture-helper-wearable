@@ -29,6 +29,7 @@ unsigned long _patternTimer;
 void pattern1(FlexSensor flex, int pin, int amplifier);
 void pattern2(FlexSensor flex, int pin);
 void pattern3(FlexSensor flex, int pin);
+void pattern4(FlexSensor flex, int pin);
 };
 
 #endif

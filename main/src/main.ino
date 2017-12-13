@@ -63,6 +63,9 @@ void loop() {
 
 
         //pass flex values to haptic controller, to activate a pattern
+        flex1.read();
+        flex2.read();
+        flex3.read();
         haptic1.update();
         flexValue1 = flex1.getValue();
         flexValue2 = flex2.getValue();

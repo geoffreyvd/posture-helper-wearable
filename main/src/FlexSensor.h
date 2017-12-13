@@ -12,6 +12,7 @@ public:
   FlexSensor();
   FlexSensor(int pin, int straightValue, int minimumValue, int maximumValue);
   void updateCalibratedValues(int val);
+  void read();
   int getValue();
   int _minimumValueAnalog;
   int _maximumValueAnalog;
@@ -22,6 +23,7 @@ public:
 
 private:
   int _pin;
+  int _currentReading;
 
 
 
