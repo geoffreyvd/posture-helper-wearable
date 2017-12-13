@@ -43,8 +43,8 @@ void HapticController::update()
 {
     if (_selectedPattern == 1)
     {
-        pattern1(_flex1, _pin1, 200);
-        pattern3(_flex2, _pin2);
+        pattern2(_flex1, _pin1);
+        pattern2(_flex2, _pin2);
         // pattern1(_flex3, _pin3, 100);
         pattern2(_flex3, _pin3);
     }
@@ -74,7 +74,7 @@ void HapticController::pattern2(FlexSensor flex, int pin) {
     unsigned long _currentTime;
     int flexValue = flex.getValue();
     int range = flex._minimumValueCalibrated - flex._maximumValueCalibrated;
-    int threshold = (range / 90) * 20; // find analog value for 1 degree and multiply by threshold required (i.e +- 20 degrees)
+    int threshold = (range / 90) * 10; // find analog value for 1 degree and multiply by threshold required (i.e +- 20 degrees)
     int upperBound = threshold;
     int lowerBound = threshold * -1;
 
