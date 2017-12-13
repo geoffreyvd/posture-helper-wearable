@@ -23,8 +23,8 @@ FlexSensor::FlexSensor(int pin, int straightValue,
         _straightValue = straightValue;
         _minimumValueAnalog = minimumValue;
         _maximumValueAnalog = maximumValue;
-        _minimumValueCalibrated = minimumValue - straightValue;
-        _maximumValueCalibrated = maximumValue - straightValue;
+        _minimumValueCalibrated = 0;
+        _maximumValueCalibrated = 0;
         _userCalibrated = 0;
         _currentReading = 0;
 }

@@ -30,7 +30,7 @@ const int STATUS_LOGGING = 2;
 unsigned long timeSinceCommunication = 0;
 unsigned long timeCurrent = 0;
 const unsigned long communicationDelay = 100; // 500ms
-int currentStatus = 1;
+int currentStatus;
 
 int flexValue1;
 int flexValue2;
@@ -50,11 +50,8 @@ HapticController haptic1(hapticfeedbackPins, selectedPattern, &flex1, &flex2, &f
 void setup() {
         //Sets the data rate in bits per second
         Serial.begin(9600);
-        currentStatus = 1;
-
-
+        currentStatus = STATUS_CALIBRATE;
 }
-
 /**
  * [loop description]
  */
@@ -77,6 +74,8 @@ void loop() {
         }
 
         if(currentStatus == STATUS_CALIBRATE) {
+
+
           flex1.updateCalibratedValues(flexValue1);
           flex2.updateCalibratedValues(flexValue2);
           flex3.updateCalibratedValues(flexValue3);
@@ -88,7 +87,7 @@ void loop() {
           Serial.print(",");
           Serial.print(selectedPattern);
           Serial.println();
-          currentStatus = 0;
+          currentStatus = STATUS_STOPPED;
 
         } else if(currentStatus == STATUS_LOGGING) {
 
