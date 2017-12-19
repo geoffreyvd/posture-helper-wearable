@@ -9,7 +9,7 @@
  * Each Pin will will form a power source for HapticFeedback motors
  *
  */
-const int hapticfeedbackPins[6] = {3, 5, 6};
+const int hapticfeedbackPins[3] = {3, 5, 6};
 const int selectedPattern = 2;
 
 //kalibration of the flex sensors, min as in smallest angle
@@ -50,7 +50,7 @@ HapticController haptic1(hapticfeedbackPins, selectedPattern, &flex1, &flex2, &f
 void setup() {
         //Sets the data rate in bits per second
         Serial.begin(9600);
-        currentStatus = STATUS_CALIBRATE;
+        currentStatus = STATUS_STOPPED;
 }
 /**
  * [loop description]
