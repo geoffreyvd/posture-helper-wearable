@@ -10,7 +10,7 @@
  *
  */
 const int hapticfeedbackPins[3] = {3, 5, 6};
-const int selectedPattern = 2;
+const int selectedPattern = 1;
 
 //kalibration of the flex sensors, min as in smallest angle
 const int STRAIGHT_VALUE_TOP = 290;

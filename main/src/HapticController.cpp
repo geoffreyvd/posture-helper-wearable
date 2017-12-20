@@ -162,7 +162,7 @@ void HapticController::pattern2(FlexSensor *flex1, FlexSensor *flex2, FlexSensor
 
     _lowToHighIntensity += 10;
 
-    if(_lowToHighIntensity >= 255) {
+    if(_lowToHighIntensity >= 260) {
       _lowToHighIntensity = 0;
     }
 
