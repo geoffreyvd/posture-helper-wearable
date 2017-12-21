@@ -50,21 +50,26 @@ void HapticController::update()
 
   if (_selectedPattern == 1)
   {
-    pattern1(_flex1, _pin1, 200);
-    pattern1(_flex2, _pin2, 150);
+    pattern1(_flex1, _pin1, 100);
+    pattern1(_flex2, _pin2, 100);
     pattern1(_flex3, _pin3, 100);
-  }else if(_selectedPattern == 2){
+
+  } else if(_selectedPattern == 2){
 
     pattern2(_flex1, _flex2, _flex3);
 
   } else if(_selectedPattern == 3){
+
     pattern3(_flex1, _pin1);
     pattern3(_flex2, _pin2);
     pattern3(_flex3, _pin3);
+
   } else if(_selectedPattern == 4) {
+
     pattern4(_pin1);
     pattern4(_pin2);
     pattern4(_pin3);
+
   }
 }
 
@@ -73,18 +78,29 @@ void HapticController::update()
 */
 void HapticController::pattern1(FlexSensor *flex, int pin, int amplifier){
   int intensity = flex->getValue();
+  bool trigger = false;
   //Serial.println("intensity: " + String(pin) +  " " + String(intensity));
-
-  //assume that value is given between -180 and +80, make negative postive so it can be used to map intensity
-  if(intensity > 0){
-    intensity = intensity * -1;
+  if(intensity > 20 || intensity < -20) {
+    trigger = true;
   }
 
-  intensity = (intensity * amplifier) / 100;
 
-  intensity = constrain(map(intensity, 0, flex->_maximumValueCalibrated, 0, 255), 0, 255);
+  //assume that value is given between -180 and +80, make negative postive so it can be used to map intensity
+  if(trigger) {
+    if(intensity > 0){
+      intensity = intensity * -1;
+    }
 
-  analogWrite(pin, intensity);
+    intensity = (intensity * amplifier) / 100;
+
+    intensity = constrain(map(intensity, 0, flex->_maximumValueCalibrated, 0, 255), 0, 255);
+
+
+    analogWrite(pin, intensity);
+  } else {
+    analogWrite(pin, 0);
+  }
+
 }
 
 void HapticController::pattern2(FlexSensor *flex1, FlexSensor *flex2, FlexSensor *flex3 ) {
@@ -94,8 +110,8 @@ void HapticController::pattern2(FlexSensor *flex1, FlexSensor *flex2, FlexSensor
   int flexValue2 = flex2->getValue();
   int flexValue3 = flex3->getValue();
 
-  int lowerBound = -27;
-  int upperBound = 27;
+  int lowerBound = -35;
+  int upperBound = 35;
 
   if(flexValue1 < lowerBound || flexValue1 > upperBound) {
     _upperCounter++;
@@ -177,8 +193,8 @@ void HapticController::pattern2(FlexSensor *flex1, FlexSensor *flex2, FlexSensor
 void HapticController::pattern3(FlexSensor *flex, int pin) {
 
   int flexValue = flex->getValue();
-  int upperBound = 15;
-  int lowerBound = -15;
+  int upperBound = 35;
+  int lowerBound = -35;
 
   if(flexValue < lowerBound || flexValue > upperBound) {
     analogWrite(pin, 255);
