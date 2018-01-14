@@ -9,13 +9,23 @@
 class FlexSensor
 {
 public:
+  FlexSensor();
   FlexSensor(int pin, int straightValue, int minimumValue, int maximumValue);
+  void updateCalibratedValues(int val);
+  void read();
   int getValue();
-private:
-  int _minimumValue;
-  int _maximumValue;
-  int _pin;
+  int _minimumValueAnalog;
+  int _maximumValueAnalog;
+  int _minimumValueCalibrated;
+  int _maximumValueCalibrated;
   int _straightValue;
+  int _userCalibrated;
+
+private:
+  int _pin;
+  int _currentReading;
+
+
 
 };
 
