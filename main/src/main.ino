@@ -50,15 +50,12 @@ HapticController haptic1(hapticfeedbackPins, selectedPattern, &flex1, &flex2, &f
 void setup() {
         //Sets the data rate in bits per second
         Serial.begin(9600);
-        currentStatus = STATUS_STOPPED;
+        currentStatus = STATUS_CALIBRATE;
 }
 /**
  * [loop description]
  */
 void loop() {
-        timeCurrent = millis();
-
-
         //pass flex values to haptic controller, to activate a pattern
         flex1.read();
         flex2.read();
@@ -74,16 +71,39 @@ void loop() {
         }
 
         if(currentStatus == STATUS_CALIBRATE) {
+          long averageFlexValue1 = 0;
+          long averageFlexValue2 = 0;
+          long averageFlexValue3 = 0;
+          int count = 0;
+
+          timeCurrent = millis();
+          haptic1.startCalibrating();
+          
+          //kalibrate for 10 seconds
+          while(millis() < (timeCurrent + 10000)){
+            flex1.read();
+            flex2.read();
+            flex3.read();
+            averageFlexValue1 += flex1.getValue();
+            averageFlexValue2 += flex2.getValue();
+            averageFlexValue3 += flex3.getValue();
+            count++;
+          }
+          haptic1.stopCalibrating();
 
           // Update with new values
-          flex1.updateCalibratedValues(flexValue1);
-          flex2.updateCalibratedValues(flexValue2);
-          flex3.updateCalibratedValues(flexValue3);
-          Serial.print(flexValue1);
+          flex1.updateCalibratedValues(averageFlexValue1 / count);
+          flex2.updateCalibratedValues(averageFlexValue2 / count);
+          flex3.updateCalibratedValues(averageFlexValue3 / count);
+
+          //FOR TESITNG PURPOSES BEFORE DEMO
+          Serial.print(averageFlexValue1);
           Serial.print(",");
-          Serial.print(flexValue2);
+          Serial.print(averageFlexValue2);
           Serial.print(",");
-          Serial.print(flexValue3);
+          Serial.print(averageFlexValue3);
+          Serial.print(",");
+          Serial.print(count);
           Serial.print(",");
           Serial.print(selectedPattern);
           Serial.println();

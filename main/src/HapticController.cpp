@@ -66,9 +66,15 @@ void HapticController::update()
 
   } else if(_selectedPattern == 4) {
 
-    pattern4(_pin1);
-    pattern4(_pin2);
-    pattern4(_pin3);
+    pattern4(_pin1, 255);
+    pattern4(_pin2, 255);
+    pattern4(_pin3, 255);
+
+  } else if(_selectedPattern == 5) {
+
+    pattern4(_pin1, 0);
+    pattern4(_pin2, 0);
+    pattern4(_pin3, 0);
 
   }
 }
@@ -204,7 +210,20 @@ void HapticController::pattern3(FlexSensor *flex, int pin) {
 
 }
 
-void HapticController::pattern4(int pin) {
-  analogWrite(pin, 255);
+void HapticController::pattern4(int pin, int intensity) {
+  analogWrite(pin, intensity);
 
+}
+
+void HapticController::startCalibrating(){
+    pattern4(_pin1, 255);
+    pattern4(_pin2, 255);
+    pattern4(_pin3, 255);
+}
+
+
+void HapticController::stopCalibrating(){
+    pattern4(_pin1, 0);
+    pattern4(_pin2, 0);
+    pattern4(_pin3, 0);
 }
