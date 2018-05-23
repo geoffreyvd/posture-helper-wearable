@@ -13,6 +13,8 @@ class HapticController
 public:
 HapticController(int pinArray[], int pattern, FlexSensor *flex1, FlexSensor *flex2, FlexSensor *flex3);
 void update();
+void startCalibrating();
+void stopCalibrating();
 private:
 int _pin1;
 int _pin2;
@@ -35,7 +37,7 @@ unsigned long _patternTimer;
 void pattern1(FlexSensor *flex, int pin, int amplifier);
 void pattern2(FlexSensor *flex1, FlexSensor *flex2, FlexSensor *flex3);
 void pattern3(FlexSensor *flex, int pin);
-void pattern4(int pin);
+void pattern4(int pin, int intensity);
 };
 
 #endif
